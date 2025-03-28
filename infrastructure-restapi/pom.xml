@@ -34,11 +34,22 @@
 	
 	<dependencies>
 		<dependency>
-            <groupId>com.example</groupId>
-            <artifactId>usecase</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+			<groupId>com.example</groupId>
+			<artifactId>usecase</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>infrastructure-dao-sqlserver</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>infrastructure-dao-inmemory</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -51,7 +62,7 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
+	<!-- <profiles>
 		<profile>
 			<id>sqlserver</id>
 			<dependencies>
@@ -72,12 +83,14 @@
 				</dependency>
 			</dependencies>
 		</profile>
-	</profiles>
+	</profiles> -->
+	
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.4</version>
 			</plugin>
 		</plugins>
 	</build>

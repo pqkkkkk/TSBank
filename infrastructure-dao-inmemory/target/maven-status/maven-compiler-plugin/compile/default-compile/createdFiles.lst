@@ -1,0 +1,2 @@
+com\example\infrastructure\dao\inmemory\BankAccountInMemoryDao.class
+com\example\infrastructure\dao\inmemory\TransactionInMemoryDao.class

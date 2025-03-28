@@ -17,7 +17,7 @@ public class BankAccountService implements IBankAccountService {
     @Override
     public boolean CreateAccount(BankAccount account) {
         try{
-            return accountDao.CreateAccount(account);
+            return accountDao.AddAccount(account);
         }catch(Exception e){
             return false;
         }

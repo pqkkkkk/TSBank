@@ -1,0 +1,7 @@
+com\example\entity\Transaction.class
+com\example\entity\BankAccount.class
+com\example\entity\TransactionType.class
+com\example\entity\Customer$CustomerBuilder.class
+com\example\entity\Customer.class
+com\example\entity\BankAccount$BankAccountBuilder.class
+com\example\entity\Transaction$TransactionBuilder.class
