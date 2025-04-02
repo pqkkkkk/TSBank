@@ -1,8 +1,8 @@
 com\example\usecase\IBankAccountService.class
+com\example\usecase\dao\ICustomerDao.class
 com\example\usecase\BankAccountService.class
 com\example\usecase\dao\IBankAccountDao.class
 com\example\usecase\TransactionResult.class
-com\example\usecase\TransactionServiceV2.class
 com\example\usecase\dao\ITransactionDao.class
 com\example\usecase\TransactionService.class
 com\example\usecase\ITransactionService.class

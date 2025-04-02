@@ -1,2 +1,6 @@
 com\example\infrastructure\dao\sqlserver\TransactionSqlDao.class
 com\example\infrastructure\dao\sqlserver\BankAccountSqlDao.class
+com\example\infrastructure\dao\sqlserver\config\DataSourceConfig.class
+com\example\infrastructure\dao\sqlserver\config\TestDataSourceConfig.class
+com\example\infrastructure\dao\sqlserver\CustomerSqlDao.class
+com\example\infrastructure\dao\sqlserver\rowmapper\BankAccountRowMapper.class

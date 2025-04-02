@@ -1,7 +1,14 @@
 package com.example.usecase;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.example.entity.BankAccount;
 import com.example.entity.Transaction;
@@ -9,7 +16,10 @@ import com.example.entity.TransactionType;
 import com.example.usecase.dao.IBankAccountDao;
 import com.example.usecase.dao.ITransactionDao;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class TransactionService implements ITransactionService {
     private final ITransactionDao transactionDao;
     private final IBankAccountDao accountDao;
@@ -21,7 +31,8 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public TransactionResult Transfer(String fromAccountId, String toAccountId, Integer amount) {
+    @Transactional
+    public TransactionResult Transfer(String fromAccountId, String toAccountId, Double amount) {
         try{
             if(amount < 0){
                 return TransactionResult.INVALID_AMOUNT;
@@ -45,12 +56,25 @@ public class TransactionService implements ITransactionService {
             }
 
             Transaction transactionOfFromAccount = Transaction.builder()
-            .type(TransactionType.DEPOSIT)
+            .type(TransactionType.WITHDRAW)
+            .accountId(fromAccount.getId())
+            .counterPartyId(toAccount.getId())
+            .createdDate(Date.valueOf(LocalDate.now()))
+            .createdTime(Time.valueOf(LocalTime.now()))
+            .amount(amount)
+            .currency("VND")
+            .status("SUCCESS")
             .build();
             transactionDao.CreateTransaction(transactionOfFromAccount);
 
             Transaction transactionOfToAccount = Transaction.builder()
-            .type(TransactionType.WITHDRAW)
+            .type(TransactionType.DEPOSIT)
+            .accountId(toAccount.getId())
+            .createdDate(Date.valueOf(LocalDate.now()))
+            .createdTime(Time.valueOf(LocalTime.now()))
+            .amount(amount)
+            .currency("VND")
+            .status("SUCCESS")
             .build();
             transactionDao.CreateTransaction(transactionOfToAccount);
 
@@ -62,13 +86,16 @@ public class TransactionService implements ITransactionService {
             return TransactionResult.SUCCESS;
         }
         catch(Exception e){
+            log.error("Error during transfer: {}", e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return TransactionResult.UNKNOWN_ERROR;
         }
 
     }
 
     @Override
-    public TransactionResult Deposit(String accountId, Integer amount) {
+    @Transactional
+    public TransactionResult Deposit(String accountId, Double amount) {
         try{
             if(amount < 0){
                 return TransactionResult.INVALID_AMOUNT;
@@ -82,12 +109,15 @@ public class TransactionService implements ITransactionService {
             if(account.getIsLocked()){
                 return TransactionResult.LOCKED_ACCOUNT;
             }
-            if(account.getBalance() < amount){
-                return TransactionResult.INSUFFICIENT_BALANCE;
-            }
-
+          
             Transaction transaction = Transaction.builder()
             .type(TransactionType.DEPOSIT)
+            .accountId(account.getId())
+            .createdDate(Date.valueOf(LocalDate.now()))
+            .createdTime(Time.valueOf(LocalTime.now()))
+            .amount(amount)
+            .currency("VND")
+            .status("SUCCESS")
             .build();
             transactionDao.CreateTransaction(transaction);
 
@@ -97,12 +127,15 @@ public class TransactionService implements ITransactionService {
             return TransactionResult.SUCCESS;
         }
         catch(Exception e){
+            log.error("Error during deposit: {}", e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return TransactionResult.UNKNOWN_ERROR;
         }
     }
 
     @Override
-    public TransactionResult Withdraw(String accountId, Integer amount) {
+    @Transactional
+    public TransactionResult Withdraw(String accountId, Double amount) {
         try{
             if(amount < 0){
                 return TransactionResult.INVALID_AMOUNT;
@@ -122,6 +155,12 @@ public class TransactionService implements ITransactionService {
 
             Transaction transaction = Transaction.builder()
             .type(TransactionType.WITHDRAW)
+            .accountId(account.getId())
+            .createdDate(Date.valueOf(LocalDate.now()))
+            .createdTime(Time.valueOf(LocalTime.now()))
+            .amount(amount)
+            .currency("VND")
+            .status("SUCCESS")
             .build();
             transactionDao.CreateTransaction(transaction);
 
@@ -131,6 +170,8 @@ public class TransactionService implements ITransactionService {
             return TransactionResult.SUCCESS;
         }
         catch(Exception e){
+            log.error("Error during withdraw: {}", e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return TransactionResult.UNKNOWN_ERROR;
         }
     }

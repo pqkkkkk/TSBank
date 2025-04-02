@@ -1,2 +1,14 @@
-com\example\controller\TransactionController.class
+com\example\dto\request\TransferRequest.class
+com\example\dto\request\DepositRequest.class
+com\example\dto\response\TransactionResponse.class
+com\example\dto\request\WithdrawRequest$WithdrawRequestBuilder.class
+com\example\dto\response\CreateBankAccountResponse.class
+com\example\dto\request\WithdrawRequest.class
+com\example\dto\request\DepositRequest$DepositRequestBuilder.class
+com\example\controller\AccountController.class
+com\example\dto\request\CreateBankAccountRequest.class
+com\example\dto\response\CreateBankAccountResponse$CreateBankAccountResponseBuilder.class
+com\example\dto\response\TransactionResponse$TransactionResponseBuilder.class
+com\example\dto\request\CreateBankAccountRequest$CreateBankAccountRequestBuilder.class
+com\example\dto\request\TransferRequest$TransferRequestBuilder.class
 com\example\InfrastructureRestapiApplication.class

@@ -12,8 +12,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Customer {
-    String id;
+    Integer id;
     String fullName;
     String email;
     String idOnTicsys;
+    String password;
 }

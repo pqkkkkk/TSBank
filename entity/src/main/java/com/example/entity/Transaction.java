@@ -1,7 +1,7 @@
 package com.example.entity;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.sql.Date;
+import java.sql.Time;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +18,12 @@ import lombok.experimental.FieldDefaults;
 public class Transaction {
     String id;
     TransactionType type;
-    Integer amount;
+    Double amount;
     String accountId;
     String counterPartyId;
     String currency;
     String status;
     String note;
-    LocalDate createdDate;
-    LocalTime createdTime;
+    Date createdDate;
+    Time createdTime;
 }

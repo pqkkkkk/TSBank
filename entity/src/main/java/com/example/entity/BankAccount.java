@@ -11,11 +11,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-
 public class BankAccount {
     String id;
-    Integer balance;
-    String customerId;
+    Double balance;
+    Integer customerId;
     Boolean isLocked;
     String currency;
 }

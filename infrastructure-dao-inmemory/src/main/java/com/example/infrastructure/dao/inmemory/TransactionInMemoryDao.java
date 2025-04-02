@@ -13,7 +13,7 @@ import com.example.usecase.dao.ITransactionDao;
 public class TransactionInMemoryDao implements ITransactionDao {
 
     @Override
-    public boolean CreateTransaction(Transaction transaction) {
+    public Integer CreateTransaction(Transaction transaction) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'CreateTransaction'");
     }
