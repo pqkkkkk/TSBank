@@ -52,6 +52,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>infrastructure-kafka</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>

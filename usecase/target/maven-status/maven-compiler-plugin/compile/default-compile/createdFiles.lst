@@ -5,4 +5,5 @@ com\example\usecase\dao\IBankAccountDao.class
 com\example\usecase\TransactionResult.class
 com\example\usecase\dao\ITransactionDao.class
 com\example\usecase\TransactionService.class
+com\example\usecase\KafkaComsumerTest.class
 com\example\usecase\ITransactionService.class

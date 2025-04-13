@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TransactionService implements ITransactionService {
     private final ITransactionDao transactionDao;
     private final IBankAccountDao accountDao;
-
     @Autowired
     public TransactionService(ITransactionDao transactionDao, IBankAccountDao accountDao) {
         this.transactionDao = transactionDao;
@@ -175,4 +174,5 @@ public class TransactionService implements ITransactionService {
             return TransactionResult.UNKNOWN_ERROR;
         }
     }
+
 }

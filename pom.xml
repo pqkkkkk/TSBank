@@ -16,6 +16,7 @@
         <module>usecase</module>
         <module>infrastructure-dao-inmemory</module>
         <module>infrastructure-dao-sqlserver</module>
+        <module>infrastructure-kafka</module>
     </modules>
 
     <dependencyManagement>

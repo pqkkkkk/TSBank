@@ -1,4 +1,22 @@
 -------------------------------------------------------------------------------
 Test set: BankAccountServiceTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.893 s -- in BankAccountServiceTest
+Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.987 s <<< FAILURE! -- in BankAccountServiceTest
+BankAccountServiceTest.testCreateAccount_FailedToCreateCustomer -- Time elapsed: 0.023 s <<< ERROR!
+org.springframework.transaction.NoTransactionException: No transaction aspect-managed TransactionStatus in scope
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.currentTransactionStatus(TransactionAspectSupport.java:165)
+	at com.example.usecase.BankAccountService.CreateAccount(BankAccountService.java:49)
+	at BankAccountServiceTest.testCreateAccount_FailedToCreateCustomer(BankAccountServiceTest.java:64)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+BankAccountServiceTest.testCreateAccount_ExceptionThrown -- Time elapsed: 0.008 s <<< ERROR!
+org.springframework.transaction.NoTransactionException: No transaction aspect-managed TransactionStatus in scope
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.currentTransactionStatus(TransactionAspectSupport.java:165)
+	at com.example.usecase.BankAccountService.CreateAccount(BankAccountService.java:49)
+	at BankAccountServiceTest.testCreateAccount_ExceptionThrown(BankAccountServiceTest.java:80)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
