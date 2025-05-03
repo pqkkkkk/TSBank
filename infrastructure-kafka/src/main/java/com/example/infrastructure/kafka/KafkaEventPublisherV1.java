@@ -1,6 +1,7 @@
 package com.example.infrastructure.kafka;
 
 
+import com.example.usecase.LinkBankAccountResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,10 @@ public class KafkaEventPublisherV1 implements IEventPublisher {
     @Override
     public void PublishOrderPaymentResult(com.example.infrastructure.kafka.event.OrderPaymentResponseEvent event) {
         kafkaTemplate.send("ticsys-order-payment-result", event);
+    }
+
+    @Override
+    public void PublishLinkBankAccountResult(LinkBankAccountResult event) {
+        kafkaTemplate.send("ticsys-link-bank-account-result", event);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -60,15 +61,24 @@ public class BankAccountSqlDao implements IBankAccountDao {
 
     @Override
     public BankAccount GetAccountById(String accountId) {
-        String sql = """
+        try {
+            String sql = """
             SELECT * FROM BankAccount
             WHERE id = :id
                 """;
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", accountId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", accountId);
 
-       return jdbcTemplate.queryForObject(sql, params, new BankAccountRowMapper());
+            return jdbcTemplate.queryForObject(sql, params, new BankAccountRowMapper());
+        } catch (Exception e) {
+            if(e instanceof IncorrectResultSizeDataAccessException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+
     }
 
     @Override

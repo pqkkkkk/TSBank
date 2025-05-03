@@ -7,6 +7,7 @@ import com.example.entity.Customer;
 
 public interface IBankAccountService {
     public String CreateAccount(Customer customer, BankAccount account);
-    public boolean LinkAccount();
+    public LinkBankAccountResult LinkAccount(String idOnTicsys, String accountId,
+                               String accountOwnerName);
     public List<BankAccount> GetAccountsOfCustomer(Integer customerId);
 }

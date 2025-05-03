@@ -1,13 +1,9 @@
 package com.example.controller;
 
+import com.example.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.dto.request.CreateBankAccountRequest;
 import com.example.dto.request.DepositRequest;
@@ -16,14 +12,17 @@ import com.example.dto.request.WithdrawRequest;
 import com.example.dto.response.CreateBankAccountResponse;
 import com.example.dto.response.GetAccountsOfCustomerResponse;
 import com.example.dto.response.TransactionResponse;
-import com.example.entity.BankAccount;
-import com.example.entity.Customer;
 import com.example.usecase.IBankAccountService;
 import com.example.usecase.ITransactionService;
 import com.example.usecase.TransactionResult;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/account")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
     private final ITransactionService transactionService;
     private final IBankAccountService bankAccountService;
@@ -81,15 +80,21 @@ public class AccountController {
 
     }
     @PostMapping("/deposit")
-    public ResponseEntity<TransactionResponse> Deposit(@RequestBody DepositRequest depositDto){
+    public ResponseEntity<TransactionResponse> Deposit(@RequestBody DepositRequest depositRequest){
 
-        var result = transactionService.Deposit(depositDto.getAccountId(), depositDto.getAmount());
+        var result = transactionService.Deposit(depositRequest.getAccountId(), depositRequest.getAmount());
 
-        if(result != TransactionResult.SUCCESS){
+        if(result == TransactionResult.UNKNOWN_ERROR){
             return ResponseEntity.badRequest().body(TransactionResponse.builder()
                 .transactionResult(result)
                 .message(result.name())
                 .build());
+        }
+        else if (result != TransactionResult.SUCCESS) {
+            return ResponseEntity.ok(TransactionResponse.builder()
+                    .transactionResult(result)
+                    .message(result.name())
+                    .build());
         }
         return ResponseEntity.ok(TransactionResponse.builder()
             .transactionResult(result)
@@ -101,11 +106,17 @@ public class AccountController {
     public ResponseEntity<TransactionResponse> Withdraw(@RequestBody WithdrawRequest withdrawDto){
         var result = transactionService.Withdraw(withdrawDto.getAccountId(), withdrawDto.getAmount());
 
-        if(result != TransactionResult.SUCCESS){
+        if(result == TransactionResult.UNKNOWN_ERROR){
             return ResponseEntity.badRequest().body(TransactionResponse.builder()
                 .transactionResult(result)
                 .message(result.name())
                 .build());
+        }
+        else if (result != TransactionResult.SUCCESS) {
+            return ResponseEntity.ok(TransactionResponse.builder()
+                    .transactionResult(result)
+                    .message(result.name())
+                    .build());
         }
         return ResponseEntity.ok(TransactionResponse.builder()
             .transactionResult(result)
@@ -119,16 +130,68 @@ public class AccountController {
                                                 transferDto.getToAccountId(),
                                                 transferDto.getAmount());
 
-        if(result != TransactionResult.SUCCESS){
+        if(result == TransactionResult.UNKNOWN_ERROR){
             return ResponseEntity.badRequest().body(TransactionResponse.builder()
                 .transactionResult(result)
                 .message(result.name())
                 .build());
         }
+        if(result != TransactionResult.SUCCESS){
+            return ResponseEntity.ok(TransactionResponse.builder()
+                    .transactionResult(result)
+                    .message(result.name())
+                    .build());
+        }
         return ResponseEntity.ok(TransactionResponse.builder()
             .transactionResult(result)
             .message("Transfer successful")
             .build());
+    }
+    @GetMapping("/{accountId}/transactions")
+    public ResponseEntity<List<Transaction>> GetTransactionsOfAccount(
+        @PathVariable("accountId") String accountId,
+        @RequestParam(required = false, name = "type") TransactionType type,
+        @RequestParam(required = false, name = "fromAmount") Double fromAmount,
+        @RequestParam(required = false, name = "toAmount") Double toAmount,
+        @RequestParam(required = false, name = "fromCreatedDate") String fromCreatedDate,
+        @RequestParam(required = false, name = "toCreatedDate") String toCreatedDate,
+        @RequestParam(required = false, name = "counterPartyId") String counterPartyId,
+        @RequestParam(required = false, name = "fromCreatedTime") String fromCreatedTime,
+        @RequestParam(required = false, name = "toCreatedTime") String toCreatedTime
+    ) {
+        Map<TransactionFilterField, Object> filter = new HashMap<>();
+        filter.put(TransactionFilterField.ACCOUNT_ID, accountId);
+        if (type != null) {
+            filter.put(TransactionFilterField.TYPE, type);
+        }
+        if (fromAmount != null) {
+            filter.put(TransactionFilterField.FROM_AMOUNT, fromAmount);
+        }
+        if (toAmount != null) {
+            filter.put(TransactionFilterField.TO_AMOUNT, toAmount);
+        }
+        if (fromCreatedDate != null) {
+            filter.put(TransactionFilterField.FROM_CREATED_DATE, fromCreatedDate);
+        }
+        if (toCreatedDate != null) {
+            filter.put(TransactionFilterField.TO_CREATED_DATE, toCreatedDate);
+        }
+        if (counterPartyId != null) {
+            filter.put(TransactionFilterField.COUNTER_PARTY_ID, counterPartyId);
+        }
+        if (fromCreatedTime != null) {
+            filter.put(TransactionFilterField.FROM_CREATED_TIME, fromCreatedTime);
+        }
+        if (toCreatedTime != null) {
+            filter.put(TransactionFilterField.TO_CREATED_TIME, toCreatedTime);
+        }
+        var result = transactionService.GetTransactions(filter);
+
+        if (result == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok(result);
     }
 
 
