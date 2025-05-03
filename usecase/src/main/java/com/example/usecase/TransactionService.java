@@ -4,7 +4,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
+import com.example.entity.TransactionFilterField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,6 +175,32 @@ public class TransactionService implements ITransactionService {
             log.error("Error during withdraw: {}", e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return TransactionResult.UNKNOWN_ERROR;
+        }
+    }
+
+    @Override
+    public List<Transaction> GetTransactions(String accountId) {
+        try{
+            List<Transaction> transactions = transactionDao.GetTransactions(accountId);
+
+            return transactions;
+        }
+        catch (Exception e){
+            log.error("Error during get transactions: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Transaction> GetTransactions(Map<TransactionFilterField, Object> filter) {
+        try{
+            List<Transaction> transactions = transactionDao.GetTransactions(filter);
+
+            return transactions;
+        }
+        catch (Exception e){
+            log.error("Error during get transactions: {}", e.getMessage());
+            return null;
         }
     }
 

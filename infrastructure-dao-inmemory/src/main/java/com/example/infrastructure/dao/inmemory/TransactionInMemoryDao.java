@@ -1,7 +1,10 @@
 package com.example.infrastructure.dao.inmemory;
 
 import java.util.List;
+import java.util.Map;
 
+import com.example.entity.TransactionFilterField;
+import com.example.entity.TransactionType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -19,9 +22,14 @@ public class TransactionInMemoryDao implements ITransactionDao {
     }
 
     @Override
-    public List<Transaction> GetTransactions() {
+    public List<Transaction> GetTransactions(String accountId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'GetTransactions'");
+    }
+
+    @Override
+    public List<Transaction> GetTransactions(Map<TransactionFilterField, Object> filter) {
+        return List.of();
     }
 
 }

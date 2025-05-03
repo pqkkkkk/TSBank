@@ -52,9 +52,34 @@ public class BankAccountService implements IBankAccountService {
     }
 
     @Override
-    public boolean LinkAccount() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'LinkAccount'");
+    @Transactional
+    public LinkBankAccountResult LinkAccount(String idOnTicsys, String accountId,
+                               String accountOwnerName) {
+        try{
+            BankAccount account =  accountDao.GetAccountById(accountId);
+            if (account == null) {
+                return LinkBankAccountResult.BANK_ACCOUNT_NOT_FOUND;
+            }
+
+            Customer customer = customerDao.GetCustomerById(account.getCustomerId());
+            customer.setFullName(customer.getFullName().replace(" ", ""));
+            if(!customer.getFullName().equals(accountOwnerName)){
+                return LinkBankAccountResult.WRONG_BANK_ACCOUNT_OWNER_NAME;
+            }
+
+            if(customer.getIdOnTicsys() != null){
+                return LinkBankAccountResult.BANK_ACCOUNT_IS_ALREADY_LINKED;
+            }
+
+            customer.setIdOnTicsys(idOnTicsys);
+            customerDao.UpdateCustomer(customer);
+
+            return LinkBankAccountResult.SUCCESS;
+        }
+        catch (Exception e){
+            log.error("Error linking account: {}", e.getMessage());
+            return LinkBankAccountResult.UNKNOWN_ERROR;
+        }
     }
     @Override
     public List<BankAccount> GetAccountsOfCustomer(Integer customerId) {

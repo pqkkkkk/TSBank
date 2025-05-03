@@ -1,11 +1,9 @@
 package com.example.infrastructure.kafka;
 
-import com.example.usecase.ITransactionService;
-import com.example.usecase.TransactionResult;
-import com.example.usecase.TransactionService;
+import com.example.infrastructure.kafka.event.LinkBankAccountRequest;
+import com.example.usecase.*;
 import com.example.infrastructure.kafka.event.OrderPaymentResponseEvent;
-import com.example.infrastructure.kafka.event.OrderPaymentRequestEvent;
-import com.example.infrastructure.kafka.IEventPublisher;
+import com.example.infrastructure.kafka.event.OrderPaymentRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,16 +14,18 @@ import org.springframework.stereotype.Service;
 public class KafkaEventHandlerV1 implements IEventHandler {
     private  final IEventPublisher eventPublisher;
     private  final ITransactionService transactionService;
+    private final BankAccountService bankAccountService;
 
     @Autowired
     public KafkaEventHandlerV1(IEventPublisher eventPublisher,
-                               ITransactionService transactionService) {
+                               ITransactionService transactionService, BankAccountService bankAccountService) {
         this.eventPublisher = eventPublisher;
         this.transactionService = transactionService;
+        this.bankAccountService = bankAccountService;
     }
     @Override
     @KafkaListener(topics = "tsbank-order-payment", groupId = "tsbank")
-    public void HandleOrderPaymentRequest(OrderPaymentRequestEvent event) {
+    public void HandleOrderPaymentRequest(OrderPaymentRequest event) {
         log.info("Received OrderPaymentRequestEvent");
         try {
             Double amount = event.getOrderPrice();
@@ -53,6 +53,24 @@ public class KafkaEventHandlerV1 implements IEventHandler {
 
             eventPublisher.PublishOrderPaymentResult(responseEvent);
             log.error("Error handling order payment request: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @KafkaListener(topics = "tsbank-link-bank-account", groupId = "tsbank")
+    public void HandleLinkBankAccountRequest(LinkBankAccountRequest event) {
+        log.info("Received LinkBankAccountRequestEvent: {} ", event);
+        try{
+            String idOnTicsys = event.getIdOnTicsys();
+            String accountId = event.getBankAccountId();
+            String accountOwnerName = event.getBankAccountOwnerName();
+            LinkBankAccountResult result = bankAccountService.LinkAccount(idOnTicsys, accountId, accountOwnerName);
+
+            eventPublisher.PublishLinkBankAccountResult(result);
+        }
+        catch (Exception e){
+            eventPublisher.PublishLinkBankAccountResult(LinkBankAccountResult.UNKNOWN_ERROR);
+            log.error("Error handling link bank account request: {}", e.getMessage(), e);
         }
     }
 }

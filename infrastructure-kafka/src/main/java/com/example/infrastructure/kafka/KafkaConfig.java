@@ -38,7 +38,10 @@ public class KafkaConfig {
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         configProps.put(JsonDeserializer.TYPE_MAPPINGS,
-                "com.example.ticsys.outbound.event.OrderPaymentRequestEvent:com.example.infrastructure.kafka.event.OrderPaymentRequestEvent");
+                "com.example.ticsys.outbound.event.OrderPaymentEvent:com.example.infrastructure.kafka.event.OrderPaymentRequest," +
+                "com.example.ticsys.outbound.event.LinkBankAccountEvent:com.example.infrastructure.kafka.event.LinkBankAccountRequest");
+
+
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
     @Bean
@@ -47,6 +50,7 @@ public class KafkaConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory());
+        factory.setAutoStartup(Boolean.TRUE);
         return factory;
     }
 }
