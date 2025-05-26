@@ -2,7 +2,6 @@ package com.example.usecase;
 
 import com.example.entity.Transaction;
 import com.example.entity.TransactionFilterField;
-import com.example.entity.TransactionType;
 
 import java.util.List;
 import java.util.Map;
